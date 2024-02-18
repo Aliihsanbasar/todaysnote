@@ -1,6 +1,6 @@
 package com.todaysnote.navigation
 
-enum class NoteScreens {
+enum class TodaysNoteScreens {
     SplashScreen,
     HomeScreen,
     AddNoteScreen,
