@@ -5,11 +5,11 @@ plugins {
 }
 
 android {
-    namespace = "com.todaysnote"
+    namespace = "com.jotquill"
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "com.todaysnote"
+        applicationId = "com.jotquill"
         minSdk = 23
         targetSdk = 34
         versionCode = 1

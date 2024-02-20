@@ -1,4 +1,4 @@
-package com.todaysnote.widgets
+package com.jotquill.widgets
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.size
@@ -13,13 +13,13 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.todaysnote.ui.theme.SoftBlue
-import com.todaysnote.ui.theme.TealPrimary
+import com.jotquill.ui.theme.HardBeige
+import com.jotquill.ui.theme.SoftBeige
 
 @Composable
-fun TodaysNoteChips(chipName: String, selected: MutableState<Boolean>, chipsClick: () -> Unit) {
+fun JotQuillChips(chipName: String, selected: MutableState<Boolean>, chipsClick: () -> Unit) {
 
     val selected1 = remember { mutableStateOf(selected) }
 
@@ -43,7 +43,13 @@ fun TodaysNoteChips(chipName: String, selected: MutableState<Boolean>, chipsClic
         } else {
             null
         },
-        border = BorderStroke(width = 2.dp, color = Color.Transparent),
-        colors = FilterChipDefaults.filterChipColors().copy(containerColor = SoftBlue, selectedContainerColor = TealPrimary)
+        border = BorderStroke(width = 2.dp, color = HardBeige),
+        colors = FilterChipDefaults.filterChipColors().copy(containerColor = SoftBeige, selectedContainerColor = HardBeige)
     )
+}
+
+@Preview
+@Composable
+private fun PreChips(){
+    JotQuillChips("Reminder", remember { mutableStateOf(false) }, {})
 }

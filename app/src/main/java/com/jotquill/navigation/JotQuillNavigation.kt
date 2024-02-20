@@ -1,25 +1,25 @@
-package com.todaysnote.navigation
+package com.jotquill.navigation
 
 import androidx.compose.runtime.Composable
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.todaysnote.screens.HomeScreen
-import com.todaysnote.screens.SplashScreen
+import com.jotquill.screens.HomeScreen
+import com.jotquill.screens.SplashScreen
 
 @Composable
-fun TodaysNoteNavigation() {
+fun JotQuillNavigation() {
     val navController = rememberNavController()
     NavHost(
         navController = navController,
-        startDestination = TodaysNoteScreens.SplashScreen.name
+        startDestination = JotQuillScreens.SplashScreen.name
     ) {
 
-        composable(TodaysNoteScreens.SplashScreen.name) {
+        composable(JotQuillScreens.SplashScreen.name) {
             SplashScreen(navController)
         }
 
-        composable(TodaysNoteScreens.HomeScreen.name) {
+        composable(JotQuillScreens.HomeScreen.name) {
             HomeScreen(navController)
         }
     }

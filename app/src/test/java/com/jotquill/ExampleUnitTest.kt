@@ -1,4 +1,4 @@
-package com.todaysnote
+package com.jotquill
 
 import org.junit.Test
 

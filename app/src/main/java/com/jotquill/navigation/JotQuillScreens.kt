@@ -1,6 +1,6 @@
-package com.todaysnote.navigation
+package com.jotquill.navigation
 
-enum class TodaysNoteScreens {
+enum class JotQuillScreens {
     SplashScreen,
     HomeScreen,
     AddNoteScreen,
