@@ -21,3 +21,13 @@ val LightBeige = Color(0xFFFDF5E6)
 val SoftBeige = Color(0xFFF5E1D1)
 val Beige = Color(0xFFF5F5F5)
 val HardBeige = Color(0xFFD2B48C)
+
+
+val NoteTitleColor = Color(0xFF343434)
+val NoteDateColor = Color(0xFF515151)
+val NoteTextColor = Color(0xFF535353)
+
+val ReminderIconColor = Color(0xFF4DC992)
+val TextIconColor = Color(0xFF6273ED)
+val AudioIconColor = Color(0xFFFC6B6B)
+//val ImageIconColor = Color(0xFF4DC992)

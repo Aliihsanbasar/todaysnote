@@ -37,6 +37,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.jotquill.R
+import com.jotquill.models.NoteTypes
 import com.jotquill.ui.theme.HardBeige
 import com.jotquill.ui.theme.LighterBeige
 import com.jotquill.ui.theme.SoftBeige
@@ -85,10 +86,19 @@ fun HomeScreen(navController: NavHostController) {
                 SearchField(it)
                 FilterChips()
 
-                LazyColumn(verticalArrangement = Arrangement.spacedBy(27.dp)) {
+                LazyColumn(
+                    modifier = Modifier
+                        .padding(PaddingValues(bottom = it.calculateBottomPadding() + 15.dp)),
+                    verticalArrangement = Arrangement.spacedBy(27.dp)
+                ) {
 
                     items(5) { index ->
-                        NoteCard()
+                        NoteCard(
+                            NoteTypes.TEXT,
+                            "Summer Vacation",
+                            "27 Jun 2024, 12:00 PM",
+                            "Tatil"
+                        )
                     }
                 }
 
