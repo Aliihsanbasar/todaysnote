@@ -11,6 +11,11 @@ composeBom = "2024.02.00"
 navigationCompose = "2.7.7"
 icons-extended = "1.6.2"
 
+kapt = "1.9.22"
+room-runtime = "2.4.0"
+roomCompilerVersion = "2.6.1"
+roomKtx = "2.6.1"
+
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
@@ -28,8 +33,14 @@ androidx-ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit
 androidx-material3 = { group = "androidx.compose.material3", name = "material3" }
 androidx-navigation-compose = { group = "androidx.navigation", name = "navigation-compose", version.ref = "navigationCompose" }
 
+#Room
+room-runtime = { group = "androidx.room-runtime:room-runtime", name = "room-runtime", version.ref = "room-runtime"}
+room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "roomCompilerVersion" }
+androidx-room-ktx = { group = "androidx.room", name = "room-ktx", version.ref = "roomKtx" }
+
 #androidx-material-icon-extended = {group = "androidx.compose.material", name = "material-icons-extended", version.ref = "icons-extended"}
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
 jetbrains-kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
+jetbrains-kotlin-kapt = {id ="org.jetbrains.kotlin.kapt", version.ref = "kapt"}
