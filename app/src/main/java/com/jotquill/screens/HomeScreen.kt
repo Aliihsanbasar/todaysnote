@@ -15,8 +15,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.FloatingActionButton
-import androidx.compose.material3.FloatingActionButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
@@ -38,9 +36,11 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.jotquill.R
 import com.jotquill.models.NoteTypes
+import com.jotquill.navigation.JotQuillScreens
 import com.jotquill.ui.theme.HardBeige
 import com.jotquill.ui.theme.LighterBeige
 import com.jotquill.ui.theme.SoftBeige
+import com.jotquill.widgets.CustomFloatingActionButton
 import com.jotquill.widgets.JotQuillChips
 import com.jotquill.widgets.NoteCard
 
@@ -64,15 +64,29 @@ fun HomeScreen(navController: NavHostController) {
                 })
         },
         floatingActionButton = {
-            FloatingActionButton(
-                modifier = Modifier.padding(bottom = 43.dp),
-                onClick = { },
-                containerColor = HardBeige,
-                shape = FloatingActionButtonDefaults.largeShape
-            ) {
+            CustomFloatingActionButton(expandable = true,
+                fabIcon = Icons.Default.Add){
 
-                Icon(imageVector = Icons.Default.Add, contentDescription = "Add", tint = SoftBeige)
+                when (it) {
+                    NoteTypes.TEXT -> {
+                        navController.navigate(JotQuillScreens.AddNoteScreen.name + "/" + NoteTypes.TEXT.name)
+                    }
+                    NoteTypes.AUDIO -> {
+                        navController.navigate(JotQuillScreens.AddNoteScreen.name + "/" + NoteTypes.AUDIO.name)
+                    }
+                    else -> {
+
+                    }
+                }
             }
+//            FloatingActionButton(
+//                modifier = Modifier.padding(bottom = 43.dp),
+//                onClick = { },
+//                containerColor = HardBeige,
+//                shape = FloatingActionButtonDefaults.largeShape
+//            ) {
+//                Icon(imageVector = Icons.Default.Add, contentDescription = "Add", tint = SoftBeige, modifier = Modifier.rotate(45f))
+//            }
         }
     ) {
 

@@ -5,12 +5,13 @@ import androidx.room.PrimaryKey
 
 @Entity(tableName = "notes")
 data class NoteEntity(
-    @PrimaryKey(autoGenerate = true) val id: Int = 0,
+    @PrimaryKey(autoGenerate = true)
+    val id: Int = 0,
 
     val noteType: Int,
     val noteTitle: String,
     val noteDate: String,
-    val noteText: String?,
-    val noteAudio: ByteArray?
+    val noteText: String,
+    val noteAudio: ByteArray
 
 )

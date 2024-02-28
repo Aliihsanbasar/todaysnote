@@ -42,7 +42,7 @@ android {
         compose = true
     }
     composeOptions {
-        kotlinCompilerExtensionVersion = "1.5.1"
+        kotlinCompilerExtensionVersion = "1.5.10"
     }
     packaging {
         resources {
@@ -71,8 +71,15 @@ dependencies {
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
 
-    implementation(libs.room.runtime)
-    implementation(libs.room.compiler)
+    implementation(libs.androidx.room.runtime.v240)
+    kapt(libs.androidx.room.compiler.v240)
+    implementation(libs.androidx.room.ktx.v240)
+
+    // Kotlin coroutine support in Room
+    implementation(libs.kotlinx.coroutines.android)
+
+    //implementation(libs.room.runtime)
+    //implementation(libs.room.compiler)
 
     //kapt(libs.androidx.room.compiler)
 
