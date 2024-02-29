@@ -8,10 +8,10 @@ data class NoteEntity(
     @PrimaryKey(autoGenerate = true)
     val id: Int = 0,
 
-    val noteType: Int,
-    val noteTitle: String,
-    val noteDate: String,
-    val noteText: String,
-    val noteAudio: ByteArray
+    val noteType: String = "",
+    val noteTitle: String = "",
+    val noteDate: String = "",
+    val noteText: String? = null,
+    val noteAudio: ByteArray? = null
 
 )

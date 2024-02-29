@@ -11,10 +11,12 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material3.Button
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -38,19 +40,27 @@ import com.jotquill.ui.theme.ReminderIconColor
 import com.jotquill.ui.theme.TextIconColor
 
 @Composable
-fun NoteCard(noteType: NoteTypes, noteTitle: String, noteDate: String, noteContent: String) {
+fun NoteCard(
+    noteType: NoteTypes,
+    noteTitle: String,
+    noteDate: String,
+    noteContent: String?,
+    audioContent: ByteArray?,
+    onDeleteClick: () -> Unit
+) {
 
     Box(
         modifier = Modifier
             .clip(RoundedCornerShape(8.dp))
             .background(Color.White)
             .fillMaxWidth()
-            .padding(vertical = 15.dp, horizontal = 13.dp), contentAlignment = Alignment.Center
+            .padding(vertical = 15.dp, horizontal = 13.dp),
+        contentAlignment = Alignment.Center
     ) {
 
         Column(modifier = Modifier.fillMaxWidth()) {
 
-            NoteHeader(noteType, noteTitle, noteDate)
+            NoteHeader(noteType, noteTitle, noteDate, onDeleteClick)
 
             HorizontalDivider(
                 modifier = Modifier
@@ -58,7 +68,7 @@ fun NoteCard(noteType: NoteTypes, noteTitle: String, noteDate: String, noteConte
                     .padding(top = 15.dp)
             )
 
-            NoteContent(noteType, noteContent)
+            NoteContent(noteType, noteContent, audioContent)
 
         }
 
@@ -66,8 +76,7 @@ fun NoteCard(noteType: NoteTypes, noteTitle: String, noteDate: String, noteConte
 }
 
 @Composable
-private fun NoteContent(noteType: NoteTypes, noteContent: String) {
-
+private fun NoteContent(noteType: NoteTypes, noteContent: String?, audioContent: ByteArray?) {
 
     when (noteType) {
         NoteTypes.TEXT -> {
@@ -75,7 +84,7 @@ private fun NoteContent(noteType: NoteTypes, noteContent: String) {
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(top = 18.dp),
-                text = noteContent,
+                text = noteContent.toString(),
                 fontFamily = FontFamily(Font(R.font.metropolisregular)),
                 fontSize = 15.sp,
                 color = NoteTextColor,
@@ -90,7 +99,7 @@ private fun NoteContent(noteType: NoteTypes, noteContent: String) {
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(top = 18.dp),
-                text = noteContent,
+                text = noteContent.toString(),
                 fontFamily = FontFamily(Font(R.font.metropolisregular)),
                 fontSize = 15.sp,
                 color = NoteTextColor,
@@ -101,7 +110,7 @@ private fun NoteContent(noteType: NoteTypes, noteContent: String) {
         }
 
         NoteTypes.AUDIO -> {
-            AudioNote()
+            AudioNote(audioContent)
         }
 
         else -> {
@@ -113,7 +122,7 @@ private fun NoteContent(noteType: NoteTypes, noteContent: String) {
 }
 
 @Composable
-fun AudioNote() {
+fun AudioNote(audioContent: ByteArray?) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -126,70 +135,92 @@ fun AudioNote() {
 }
 
 @Composable
-private fun NoteHeader(noteType: NoteTypes, noteTitle: String, noteDate: String) {
-    Row {
+private fun NoteHeader(
+    noteType: NoteTypes,
+    noteTitle: String,
+    noteDate: String,
+    onDeleteClick: () -> Unit
+) {
+    Row(
+        modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.SpaceBetween
+    ) {
 
-        Box(
-            modifier = Modifier
-                .clip(CircleShape)
-                .size(40.dp)
-                .background(
-                    when (noteType) {
+        Row(verticalAlignment = Alignment.CenterVertically) {
+
+            Box(
+                modifier = Modifier
+                    .clip(CircleShape)
+                    .size(40.dp)
+                    .background(
+                        when (noteType) {
+                            NoteTypes.TEXT -> {
+                                TextIconColor
+                            }
+
+                            NoteTypes.REMINDER -> {
+                                ReminderIconColor
+                            }
+
+                            NoteTypes.AUDIO -> {
+                                AudioIconColor
+                            }
+
+                            else -> {
+                                Color.LightGray
+                            }
+                        }
+                    ),
+                contentAlignment = Alignment.Center
+            ) {
+                Icon(
+                    painter = when (noteType) {
                         NoteTypes.TEXT -> {
-                            TextIconColor
+                            painterResource(id = R.drawable.ic_text)
                         }
 
                         NoteTypes.REMINDER -> {
-                            ReminderIconColor
+                            painterResource(id = R.drawable.ic_reminder)
                         }
 
                         NoteTypes.AUDIO -> {
-                            AudioIconColor
+                            painterResource(id = R.drawable.ic_audio)
                         }
 
                         else -> {
-                            Color.LightGray
+                            painterResource(id = R.drawable.ic_text)
                         }
-                    }
-                ),
-            contentAlignment = Alignment.Center
-        ) {
-            Icon(
-                painter = when (noteType) {
-                    NoteTypes.TEXT -> {
-                        painterResource(id = R.drawable.ic_text)
-                    }
-
-                    NoteTypes.REMINDER -> {
-                        painterResource(id = R.drawable.ic_reminder)
-                    }
-
-                    NoteTypes.AUDIO -> {
-                        painterResource(id = R.drawable.ic_audio)
-                    }
-
-                    else -> {
-                        painterResource(id = R.drawable.ic_text)
-                    }
-                }, contentDescription = null
-            )
+                    }, contentDescription = null
+                )
+            }
+            Column(
+                modifier = Modifier.padding(start = 14.dp),
+                verticalArrangement = Arrangement.spacedBy(7.dp)
+            ) {
+                Text(
+                    text = noteTitle,
+                    fontFamily = FontFamily(Font(R.font.metropolissemibold)),
+                    fontSize = 16.sp,
+                    color = NoteTitleColor
+                )
+                Text(
+                    text = noteDate,
+                    fontFamily = FontFamily(Font(R.font.metropolismedium)),
+                    fontSize = 12.sp,
+                    color = NoteDateColor
+                )
+            }
         }
 
-        Column(
-            modifier = Modifier.padding(start = 14.dp),
-            verticalArrangement = Arrangement.spacedBy(7.dp)
-        ) {
-            Text(
-                text = noteTitle,
-                fontFamily = FontFamily(Font(R.font.metropolissemibold)),
-                fontSize = 16.sp,
-                color = NoteTitleColor
-            )
-            Text(
-                text = noteDate,
-                fontFamily = FontFamily(Font(R.font.metropolismedium)),
-                fontSize = 12.sp,
-                color = NoteDateColor
+
+        IconButton(
+            onClick = {
+                onDeleteClick.invoke()
+            }) {
+            Icon(
+                imageVector = Icons.Filled.Delete,
+                contentDescription = null,
+                tint = Color.Red.copy(alpha = 0.5f)
             )
         }
     }
@@ -199,11 +230,11 @@ private fun NoteHeader(noteType: NoteTypes, noteTitle: String, noteDate: String)
 @Preview
 @Composable
 private fun PreNoteCard() {
-    NoteCard(NoteTypes.TEXT, "Summer Vacation", "27 Jun 2024, 12:00 PM", "Tatil")
+    NoteCard(NoteTypes.TEXT, "Summer Vacation", "27 Jun 2024, 12:00 PM", "Tatil", null, {})
 }
 
 @Preview
 @Composable
-private fun PreAudio(){
-    AudioNote()
+private fun PreAudio() {
+    AudioNote(audioContent = byteArrayOf())
 }

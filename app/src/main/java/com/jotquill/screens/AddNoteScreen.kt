@@ -32,18 +32,31 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.jotquill.R
+import com.jotquill.components.replaceEmptyTitle
+import com.jotquill.data.entities.NoteEntity
 import com.jotquill.models.NoteTypes
 import com.jotquill.ui.theme.HardBeige
 import com.jotquill.ui.theme.LighterBeige
 import com.jotquill.ui.theme.NoteTextColor
 import com.jotquill.ui.theme.NoteTitleColor
+import com.jotquill.viewmodel.NoteViewModel
+import java.text.DateFormat
+import java.text.SimpleDateFormat
+import java.util.Calendar
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AddNoteScreen(navController: NavHostController, noteType: String?) {
+fun AddNoteScreen(navController: NavHostController, noteType: String) {
 
+    val noteViewModel = hiltViewModel<NoteViewModel>()
+
+    var headerText = ""
+    var contentText = ""
+    val df: DateFormat = SimpleDateFormat("EEE, d MMM yyyy, HH:mm")
+    val date: String = df.format(Calendar.getInstance().time)
 
     Scaffold(modifier = Modifier.fillMaxSize(), containerColor = LighterBeige, topBar = {
         TopAppBar(modifier = Modifier.padding(20.dp),
@@ -59,7 +72,22 @@ fun AddNoteScreen(navController: NavHostController, noteType: String?) {
                 }
             },
             actions = {
-                IconButton(onClick = { }) {
+                IconButton(onClick = {
+
+                    val note = NoteEntity(
+                        noteType = noteType,
+                        noteTitle = headerText.replaceEmptyTitle(),
+                        noteText = contentText,
+                        noteDate = date,
+                        noteAudio = null
+                    )
+
+                    noteViewModel.insert(note)
+                    navController.previousBackStackEntry?.savedStateHandle?.set("isSaved", true)
+                    navController.popBackStack()
+
+
+                }) {
                     Icon(
                         imageVector = Icons.Filled.Check,
                         contentDescription = null,
@@ -69,39 +97,41 @@ fun AddNoteScreen(navController: NavHostController, noteType: String?) {
             })
     }) {
 
-        TextNoteType(it)
+        TextNoteType(paddingValues = it,
+            onTitleChange = { title ->
+                headerText = title
+            }, onContentChange = { content ->
+                contentText = content
+            })
 
-
-//        when (noteType) {
-//            NoteTypes.TEXT.name -> {
-//                Text(text = "TEXT")
-//            }
-//
-//            NoteTypes.AUDIO.name -> {
-//                Text(text = "AUDIO")
-//            }
-//        }
     }
 }
 
 @Composable
 @OptIn(ExperimentalMaterial3Api::class)
 private fun TextNoteType(
-    it: PaddingValues,
+    paddingValues: PaddingValues,
+    onTitleChange: (String) -> Unit,
+    onContentChange: (String) -> Unit
 ) {
-    var headerText by remember { mutableStateOf("") }
-    var contentText by remember { mutableStateOf("") }
+
+    var headText by remember { mutableStateOf("") }
+    var conText by remember { mutableStateOf("") }
+
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(top = it.calculateTopPadding(), start = 20.dp, end = 20.dp)
+            .padding(top = paddingValues.calculateTopPadding(), start = 20.dp, end = 20.dp)
     ) {
         TextField(
             modifier = Modifier.fillMaxWidth(),
             singleLine = true,
-            value = headerText,
+            value = headText,
             onValueChange = { header ->
-                if (header.length <= 25) headerText = header
+                if (header.length <= 25) {
+                    headText = header
+                    onTitleChange(headText)
+                }
             },
             textStyle = TextStyle(
                 fontFamily = FontFamily(Font(R.font.metropolisbold)),
@@ -123,9 +153,10 @@ private fun TextNoteType(
             modifier = Modifier
                 .padding(top = 35.dp)
                 .fillMaxWidth(),
-            value = contentText,
+            value = conText,
             onValueChange = { content ->
-                contentText = content
+                conText = content
+                onContentChange(conText)
             },
             textStyle = TextStyle(
                 fontFamily = FontFamily(Font(R.font.metropolisregular)),

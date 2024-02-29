@@ -88,8 +88,15 @@ dependencies {
     //dagger - hilt
     implementation (libs.hilt.android)
     kapt (libs.hilt.android.compiler)
-    //implementation (libs.androidx.hilt.lifecycle.viewmodel)
     kapt (libs.androidx.hilt.compiler)
+
+    implementation(libs.androidx.lifecycle.viewmodel.compose)
+    implementation(libs.androidx.lifecycle.viewmodel.ktx)
+    implementation (libs.androidx.lifecycle.livedata.ktx)
+
+    implementation(libs.androidx.hilt.navigation.compose)
+
+    implementation (libs.androidx.runtime.livedata)
 
     //implementation(libs.room.runtime)
     //implementation(libs.room.compiler)

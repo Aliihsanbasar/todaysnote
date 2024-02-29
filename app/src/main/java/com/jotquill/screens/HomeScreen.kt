@@ -23,6 +23,8 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -33,20 +35,37 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.jotquill.R
+import com.jotquill.components.returnNoteType
 import com.jotquill.models.NoteTypes
 import com.jotquill.navigation.JotQuillScreens
 import com.jotquill.ui.theme.HardBeige
 import com.jotquill.ui.theme.LighterBeige
 import com.jotquill.ui.theme.SoftBeige
+import com.jotquill.viewmodel.NoteViewModel
 import com.jotquill.widgets.CustomFloatingActionButton
 import com.jotquill.widgets.JotQuillChips
 import com.jotquill.widgets.NoteCard
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HomeScreen(navController: NavHostController) {
+fun HomeScreen(navController: NavHostController, isSaved: Boolean?) {
+
+    val noteViewModel = hiltViewModel<NoteViewModel>()
+
+    val noteList by noteViewModel.allNotes.observeAsState()
+
+    val isNoteSaved by remember { mutableStateOf(isSaved) }
+
+    val isNoteDeleted = remember {
+        mutableStateOf(false)
+    }
+
+    if (isNoteDeleted.value) noteViewModel.getAllNotes()
+
+    if(isNoteSaved == true) noteViewModel.getAllNotes()
 
     Scaffold(
         modifier = Modifier
@@ -79,14 +98,6 @@ fun HomeScreen(navController: NavHostController) {
                     }
                 }
             }
-//            FloatingActionButton(
-//                modifier = Modifier.padding(bottom = 43.dp),
-//                onClick = { },
-//                containerColor = HardBeige,
-//                shape = FloatingActionButtonDefaults.largeShape
-//            ) {
-//                Icon(imageVector = Icons.Default.Add, contentDescription = "Add", tint = SoftBeige, modifier = Modifier.rotate(45f))
-//            }
         }
     ) {
 
@@ -101,18 +112,31 @@ fun HomeScreen(navController: NavHostController) {
                 FilterChips()
 
                 LazyColumn(
-                    modifier = Modifier
+                    modifier = Modifier.fillMaxSize()
                         .padding(PaddingValues(bottom = it.calculateBottomPadding() + 15.dp)),
-                    verticalArrangement = Arrangement.spacedBy(27.dp)
+                    verticalArrangement = if(noteList == null || noteList!!.isEmpty()) Arrangement.Center else Arrangement.spacedBy(27.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally
                 ) {
 
-                    items(5) { index ->
-                        NoteCard(
-                            NoteTypes.TEXT,
-                            "Summer Vacation",
-                            "27 Jun 2024, 12:00 PM",
-                            "Tatil"
-                        )
+                    if(noteList == null || noteList!!.isEmpty()){
+                        item {
+                            Text(text = "Not Found Note")
+                        }
+                    }else{
+
+                        items(noteList!!.size) { index ->
+                            NoteCard(
+                                noteType = returnNoteType(noteList!![index].noteType),
+                                noteTitle = noteList!![index].noteTitle,
+                                noteDate = noteList!![index].noteDate,
+                                noteContent = noteList!![index].noteText,
+                                audioContent = noteList!![index].noteAudio,
+                                onDeleteClick = {
+                                    noteViewModel.deleteNote(noteList!![index].id)
+                                    isNoteDeleted.value = true
+                                }
+                            )
+                        }
                     }
                 }
 
@@ -120,6 +144,8 @@ fun HomeScreen(navController: NavHostController) {
         }
     }
 }
+
+
 
 
 @Composable
@@ -185,5 +211,8 @@ fun FilterChips() {
 @Preview
 @Composable
 fun PreviewHomeScreen() {
-    HomeScreen(navController = NavHostController(LocalContext.current))
+    HomeScreen(
+        navController = NavHostController(LocalContext.current),
+        isSaved = false
+    )
 }

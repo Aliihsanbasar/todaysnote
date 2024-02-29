@@ -22,14 +22,15 @@ fun JotQuillNavigation() {
             SplashScreen(navController)
         }
 
-        composable(JotQuillScreens.HomeScreen.name) {
-            HomeScreen(navController)
+        composable(JotQuillScreens.HomeScreen.name) { entry ->
+
+            HomeScreen(navController, entry.savedStateHandle.get<Boolean>("isSaved"))
         }
 
         composable(JotQuillScreens.AddNoteScreen.name + "/{noteType}",
             arguments = listOf(navArgument("noteType") { type = NavType.StringType })) {
 
-            AddNoteScreen(navController, it.arguments?.getString("noteType"))
+            AddNoteScreen(navController, it.arguments?.getString("noteType").toString())
         }
     }
 }
