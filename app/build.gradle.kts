@@ -2,6 +2,7 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
     alias(libs.plugins.jetbrains.kotlin.kapt)
+    alias(libs.plugins.dagger.hilt.android)
 
 }
 
@@ -49,6 +50,12 @@ android {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
         }
     }
+    kapt {
+        correctErrorTypes = true
+    }
+    hilt {
+        enableAggregatingTask = true
+    }
 }
 
 dependencies {
@@ -77,6 +84,12 @@ dependencies {
 
     // Kotlin coroutine support in Room
     implementation(libs.kotlinx.coroutines.android)
+
+    //dagger - hilt
+    implementation (libs.hilt.android)
+    kapt (libs.hilt.android.compiler)
+    //implementation (libs.androidx.hilt.lifecycle.viewmodel)
+    kapt (libs.androidx.hilt.compiler)
 
     //implementation(libs.room.runtime)
     //implementation(libs.room.compiler)

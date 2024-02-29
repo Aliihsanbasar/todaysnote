@@ -1,12 +1,7 @@
 package com.jotquill
 
 import android.app.Application
-import com.jotquill.data.AppDatabase
+import dagger.hilt.android.HiltAndroidApp
 
-class JotQuill : Application() {
-    override fun onCreate() {
-        super.onCreate()
-
-        AppDatabase.getInstance(this)
-    }
-}
+@HiltAndroidApp
+class JotQuill : Application()
