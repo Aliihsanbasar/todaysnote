@@ -6,19 +6,24 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.Pause
 import androidx.compose.material.icons.filled.PlayArrow
-import androidx.compose.material3.Button
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -33,6 +38,7 @@ import androidx.compose.ui.unit.sp
 import com.jotquill.R
 import com.jotquill.models.NoteTypes
 import com.jotquill.ui.theme.AudioIconColor
+import com.jotquill.ui.theme.HardBeige
 import com.jotquill.ui.theme.NoteDateColor
 import com.jotquill.ui.theme.NoteTextColor
 import com.jotquill.ui.theme.NoteTitleColor
@@ -123,14 +129,32 @@ private fun NoteContent(noteType: NoteTypes, noteContent: String?, audioContent:
 
 @Composable
 fun AudioNote(audioContent: ByteArray?) {
+
+    var isPlaying by remember {
+        mutableStateOf(false)
+    }
+
     Row(
         modifier = Modifier
             .fillMaxWidth()
             .padding(top = 18.dp)
     ) {
-        Button(onClick = { }) {
-            Icon(imageVector = Icons.Default.PlayArrow, contentDescription = null)
+
+        IconButton(modifier = Modifier.background(HardBeige, shape = CircleShape),
+            onClick = { isPlaying = !isPlaying }) {
+            Icon(imageVector = if(isPlaying)Icons.Default.Pause else Icons.Default.PlayArrow,
+                contentDescription = null)
         }
+
+        VoiceBar(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(start = 20.dp)
+                .height(48.dp),
+            barWidth = 3.dp,
+            gapWidth = 2.dp,
+            isAnimating = isPlaying,
+        )
     }
 }
 
@@ -230,7 +254,7 @@ private fun NoteHeader(
 @Preview
 @Composable
 private fun PreNoteCard() {
-    NoteCard(NoteTypes.TEXT, "Summer Vacation", "27 Jun 2024, 12:00 PM", "Tatil", null, {})
+    NoteCard(NoteTypes.AUDIO, "Audio Note", "27 Jun 2024, 12:00 PM", null, byteArrayOf(), {})
 }
 
 @Preview
