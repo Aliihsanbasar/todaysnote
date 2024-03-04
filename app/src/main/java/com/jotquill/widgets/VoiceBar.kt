@@ -106,7 +106,7 @@ const val MaxLinesCount = 100
 
 @Preview
 @Composable
-fun AnimatedVolumeLevelBarPreview(){
+fun VoiceBarPreview(){
     VoiceBar(
         modifier = Modifier
             .fillMaxWidth(1f)
